@@ -115,13 +115,17 @@ To ensure clear code tracking and review:
    git checkout -b main_<your_username>
    ```
 3. Pick an issue from the GitHub Issues board.
-4. Commit progress regularly:
+4. Create yout own personal branch for that issue
+   ```bash
+   git checkout -b issue_1_<your_username>
+   ```
+5. Commit progress regularly:
    ```bash
    git add .
    git commit -m "✅ Implemented user registration"
-   git push origin main_<your_username>
+   git push origin issue_1_<your_username>
    ```
-5. When a task is complete, mark the GitHub issue and notify for review.
+6. When a task is complete, raise the PR to `main_<your_username>` and notify for review
 
 ### 🛠️ Common FastAPI Commands
 
