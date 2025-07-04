@@ -27,9 +27,24 @@ A modern, async-first backend ToDo API using:
    cd fastapi-todo
    ```
 2. Install dependencies:
-   ```bash
-   poetry install
-   ```  
+   - Install poetry
+      - CMD, PowerShell, Git Bash, or Windows Terminal:
+         ```bash
+         (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
+         ```
+      - Linux/macOS:
+         ```bash
+         curl -sSL https://install.python-poetry.org | python3 -
+         ```
+   - Add Poetry to PATH (Windows only)
+   - Verify
+      ```bash
+      poetry --version
+      ``` 
+   - Install Packages
+      ```bash
+      poetry install
+      ```  
 
 3. Create database:
    1. Install `postgresql` in your machine
