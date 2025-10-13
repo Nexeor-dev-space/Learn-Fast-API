@@ -84,7 +84,8 @@ A modern, async-first backend ToDo API using:
       **Note**: Replace todo_user, todo_pass, todo_db with appropriate names
 4. Set environment variables in .env:
 ```ini
-DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/todo_db
+SYNC_DATABASE_URL=postgresql://user:password@localhost:5432/todo_db
+ASYNC_DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/todo_db
 JWT_SECRET_KEY=your-secret-key
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 REFRESH_TOKEN_EXPIRE_MINUTES=10080
