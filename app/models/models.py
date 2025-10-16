@@ -2,8 +2,8 @@ from app.db.database import Base
 from sqlalchemy import Column,Integer,String
 import bcrypt
 
-class User(Base):
-    __tablename__="user"
+class Users(Base):
+    __tablename__="users"
     id =Column(Integer,primary_key=True,index=True)
     username=Column(String,nullable=False,unique=True)
     fullname=Column(String,nullable=False)
