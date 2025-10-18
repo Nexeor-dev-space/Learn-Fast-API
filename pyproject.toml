@@ -1,13 +1,20 @@
 [project]
-name = "learn-fast-api"
+name = "learn-fastapi"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "ankit",email = "ankitkarapurkar444@gmail.com"}
+    {name = "Your Name",email = "you@example.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 dependencies = [
+    "fastapi (>=0.119.0,<0.120.0)",
+    "uvicorn (>=0.37.0,<0.38.0)",
+    "sqlalchemy (>=2.0.44,<3.0.0)",
+    "asyncpg (>=0.30.0,<0.31.0)",
+    "python-jose[cryptography] (>=3.5.0,<4.0.0)",
+    "passlib[bcrypt] (>=1.7.4,<2.0.0)",
+    "pydantic-settings (>=2.11.0,<3.0.0)"
 ]
 
 
