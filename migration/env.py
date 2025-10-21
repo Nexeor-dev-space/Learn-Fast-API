@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 
-from app.core.migration_settings import SYNC_DB_URL
+from app.migration_settings import SYNC_DB_URL
 from app.models.models import Users
 
 # this is the Alembic Config object, which provides
