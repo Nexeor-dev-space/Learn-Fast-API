@@ -1,8 +1,13 @@
 from pydantic import BaseModel
  
-class UserCreate(BaseModel):
-    username:str
-    fullname:str
-    password:str
-class UserRead(UserCreate):
-    pass 
+class UserBase(BaseModel):
+    username: str
+    fullname: str
+
+class UserCreate(UserBase):
+    password: str
+
+class UserRead(UserBase):
+    id: int
+class Config:
+    orm_model=True
