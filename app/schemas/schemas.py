@@ -8,7 +8,6 @@ class UserCreate(UserBase):
     password: str
 
 class UserLogin(UserBase):
-    username:str
     password:str
 
 class UserRead(UserBase):
