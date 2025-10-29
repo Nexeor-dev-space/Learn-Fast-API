@@ -4,6 +4,8 @@ from sqlalchemy.future import select
 from app.models.models import Users
 from app.schemas.schemas import *
 from app.db.database import get_async_db
+from app.auth.login import create_access_token, get_current_user
+import bcrypt
 
 router=APIRouter(prefix="/auth",tags=["Authentication"])
 
@@ -23,4 +25,31 @@ async def validate_user(users:UserCreate,db: AsyncSession = Depends(get_async_db
     except:
         await db.rollback()
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Database integrity error (possible duplicate username)")
+
+@router.post("/login")
+async def login(entry: UserLogin, db: AsyncSession = Depends(get_async_db)):
+    result = await db.execute(select(Users).where(Users.username == entry.username))
+    no_user = result.scalar_one_or_none()
+    if not no_user:
+        raise HTTPException(status_code=400, detail="Invalid username")
+    if not bcrypt.checkpw(entry.password.encode('utf-8'), no_user.hashed_password.encode('utf-8')):
+        raise HTTPException(status_code=401, detail="Invalid password")
+    access_token = create_access_token({"sub": no_user.username})
+    return {
+        "message": "Login successful",
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "username": no_user.username,
+            "fullname": no_user.fullname
+        }
+    }
+
+@router.get("/me")
+async def get_me(current_user: Users = Depends(get_current_user)):
+    return {
+        "id": current_user.id,
+        "username": current_user.username,
+        "fullname": current_user.fullname
+    }
         
