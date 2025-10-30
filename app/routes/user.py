@@ -29,19 +29,19 @@ async def validate_user(users:UserCreate,db: AsyncSession = Depends(get_async_db
 @router.post("/login")
 async def login(entry: UserLogin, db: AsyncSession = Depends(get_async_db)):
     result = await db.execute(select(Users).where(Users.username == entry.username))
-    no_user = result.scalar_one_or_none()
-    if not no_user:
+    user = result.scalar_one_or_none()
+    if not user:
         raise HTTPException(status_code=400, detail="Invalid username")
-    if not bcrypt.checkpw(entry.password.encode('utf-8'), no_user.hashed_password.encode('utf-8')):
+    if not bcrypt.checkpw(entry.password.encode('utf-8'), user.hashed_password.encode('utf-8')):
         raise HTTPException(status_code=401, detail="Invalid password")
-    access_token = create_access_token({"sub": no_user.username})
+    access_token = create_access_token({"sub": user.username})
     return {
         "message": "Login successful",
         "access_token": access_token,
         "token_type": "bearer",
         "user": {
-            "username": no_user.username,
-            "fullname": no_user.fullname
+            "username": user.username,
+            "fullname": user.fullname
         }
     }
 
