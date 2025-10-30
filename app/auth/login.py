@@ -1,27 +1,18 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from fastapi import HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer
+from app.core.settings import Token_settings
 from app.db.database import get_async_db
 from app.models.models import Users
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env', extra="ignore")
-    JWT_SECRET_KEY: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int
-    JWT_ALGORITHM: str = "HS256"
-
-settings = Settings()
-
 def create_access_token(data: dict):
-    """Generate a JWT access token."""
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + timedelta(minutes=Token_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, Token_settings.JWT_SECRET_KEY, algorithm=Token_settings.JWT_ALGORITHM)
     return encoded_jwt
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
@@ -38,7 +29,7 @@ async def get_current_user(
     )
 
     try:
-        payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
+        payload = jwt.decode(token, Token_settings.JWT_SECRET_KEY, algorithms=[Token_settings.JWT_ALGORITHM])
         username = payload.get("sub")
         if username is None:
             raise credentials_exception
