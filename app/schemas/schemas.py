@@ -2,9 +2,9 @@ from pydantic import BaseModel,ConfigDict
  
 class UserBase(BaseModel):
     username: str
-    fullname: str
 
 class UserCreate(UserBase):
+    fullname: str
     password: str
 
 class UserLogin(UserBase):
