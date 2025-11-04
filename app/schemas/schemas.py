@@ -2,10 +2,13 @@ from pydantic import BaseModel,ConfigDict
  
 class UserBase(BaseModel):
     username: str
-    fullname: str
 
 class UserCreate(UserBase):
+    fullname: str
     password: str
+
+class UserLogin(UserBase):
+    password:str
 
 class UserRead(UserBase):
     id: int
