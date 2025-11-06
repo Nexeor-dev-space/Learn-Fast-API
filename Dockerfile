@@ -1,25 +1,22 @@
-# Use a lightweight Python base image
-FROM python:3.12-slim
+# Use Python 3.12 as the base image
+FROM python:3.12
 
-# Prevent Python from writing pyc files and buffer stdout/stderr
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file first for better cache leveraging
-COPY requirements.txt /app/
+# Copy only dependency files first for caching
+COPY pyproject.toml poetry.lock ./
 
-# Install dependencies
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r /app/requirements.txt
+# Install Poetry and project dependencies
+RUN pip install poetry
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-root
 
-# Copy the rest of the application code
-COPY . /app/
+# Copy the entire project after dependencies are installed
+COPY . .
 
-# Expose the port the app runs on
-EXPOSE 8000
+# Make the start scripts executable
+RUN chmod +x start.sh 
 
-# Command to run the app
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Default to bash, command will be overridden by docker-compose
+ENTRYPOINT ["/bin/bash"]
