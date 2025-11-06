@@ -5,6 +5,7 @@ from app.models.models import Users
 from app.schemas.schemas import *
 from app.db.database import get_async_db
 from app.auth.login import create_access_token, get_current_user
+from typing import List
 import bcrypt
 
 router=APIRouter(prefix="/auth",tags=["Authentication"])
@@ -52,4 +53,4 @@ async def get_me(current_user: Users = Depends(get_current_user)):
         "username": current_user.username,
         "fullname": current_user.fullname
     }
-        
+
