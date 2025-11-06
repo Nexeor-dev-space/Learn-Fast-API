@@ -9,7 +9,7 @@ from typing import List,Optional
 
 crud=APIRouter(prefix="/task",tags=["Task"])
 
-@crud.post("/Create", response_model=TaskRead, status_code=status.HTTP_201_CREATED)
+@crud.post("/create", response_model=TaskRead, status_code=status.HTTP_201_CREATED)
 async def create_task(task_in: TaskCreate,db: AsyncSession = Depends(get_async_db),current_user: Todo = Depends(get_current_user),):
     if task_in.owner_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cannot create task for another user")
@@ -42,7 +42,7 @@ async def list_tasks_paginated(
     tasks = result.scalars().all()
     return tasks
 
-@crud.put("/Update/{task_id}", response_model=TaskRead)
+@crud.put("/update/{task_id}", response_model=TaskRead)
 async def update_task(task_id: int,task_in: TaskUpdate,db: AsyncSession = Depends(get_async_db),current_user: Todo = Depends(get_current_user),):
     result = await db.execute(select(Todo).where(Todo.id == task_id, Todo.owner_id == current_user.id))
     task = result.scalars().first()
@@ -56,7 +56,7 @@ async def update_task(task_id: int,task_in: TaskUpdate,db: AsyncSession = Depend
     await db.refresh(task)
     return task
 
-@crud.delete("/Delete/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+@crud.delete("/delete/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_task(task_id: int,db: AsyncSession = Depends(get_async_db),current_user: Todo = Depends(get_current_user),):
     result = await db.execute(select(Todo).where(Todo.id == task_id, Todo.owner_id == current_user.id))
     task = result.scalars().first()
