@@ -1,7 +1,7 @@
 from fastapi import APIRouter,Depends,HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.models.models import Users,Todo
+from app.models.models import Users
 from app.schemas.schemas import *
 from app.db.database import get_async_db
 from app.auth.login import create_access_token, get_current_user
@@ -9,7 +9,6 @@ from typing import List
 import bcrypt
 
 router=APIRouter(prefix="/auth",tags=["Authentication"])
-crud=APIRouter(prefix="/task",tags=["Task"])
 
 @router.post("/register")
 async def validate_user(users:UserCreate,db: AsyncSession = Depends(get_async_db)):
@@ -55,48 +54,3 @@ async def get_me(current_user: Users = Depends(get_current_user)):
         "fullname": current_user.fullname
     }
 
-@crud.post("/", response_model=TaskRead, status_code=status.HTTP_201_CREATED)
-async def create_task(task_in: TaskCreate,db: AsyncSession = Depends(get_async_db),current_user: Users = Depends(get_current_user),):
-    if task_in.owner_id != current_user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cannot create task for another user")
-
-    new_task = Todo(
-        title=task_in.title,
-        description=task_in.description,
-        completed=task_in.completed,
-        owner_id=current_user.id
-    )
-    db.add(new_task)
-    await db.commit()
-    await db.refresh(new_task)
-    return new_task
-
-@crud.get("/", response_model=List[TaskRead])
-async def get_tasks(db: AsyncSession = Depends(get_async_db),current_user: Users = Depends(get_current_user),):
-    result = await db.execute(select(Todo).where(Todo.owner_id == current_user.id))
-    tasks = result.scalars().all()
-    return tasks
-
-@crud.put("/{task_id}", response_model=TaskRead)
-async def update_task(task_id: int,task_in: TaskUpdate,db: AsyncSession = Depends(get_async_db),current_user: Users = Depends(get_current_user),):
-    result = await db.execute(select(Todo).where(Todo.id == task_id, Todo.owner_id == current_user.id))
-    task = result.scalars().first()
-    if not task:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
-
-    update_data = task_in.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
-        setattr(task, field, value)
-    await db.commit()
-    await db.refresh(task)
-    return task
-
-@crud.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_task(task_id: int,db: AsyncSession = Depends(get_async_db),current_user: Users = Depends(get_current_user),):
-    result = await db.execute(select(Todo).where(Todo.id == task_id, Todo.owner_id == current_user.id))
-    task = result.scalars().first()
-    if not task:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
-    await db.delete(task)
-    await db.commit()
-    return None
