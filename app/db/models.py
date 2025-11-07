@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from app.core.database import Base  # make sure this Base is the same used in Alembic
+from app.core.database import Base
 
 class User(Base):
     __tablename__ = "users"
