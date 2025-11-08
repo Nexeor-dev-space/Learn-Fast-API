@@ -1,26 +1,27 @@
+# app/schemas/user.py
+
 from pydantic import BaseModel
 
-<<<<<<< HEAD
-class UserCreate(BaseModel):
-    username: str
-    fullname: str
-    password: str  # raw password, will hash before saving
-
-class UserRead(BaseModel):
-    id: int
-    username: str
-    fullname: str
-=======
+# ------------------------------------------------------
+# Common fields shared between create/read schemas
+# ------------------------------------------------------
 class UserBase(BaseModel):
     username: str
     fullname: str
 
-class UserCreate(UserBase):
-    password: str
 
+# ------------------------------------------------------
+# Schema for creating a new user
+# ------------------------------------------------------
+class UserCreate(UserBase):
+    password: str  # Plain password from the client
+
+
+# ------------------------------------------------------
+# Schema for reading user data (response model)
+# ------------------------------------------------------
 class UserRead(UserBase):
     id: int
->>>>>>> main-daminiyadav23
 
     class Config:
-        orm_mode = True
+        orm_mode = True  # Converts SQLAlchemy model -> Pydantic model

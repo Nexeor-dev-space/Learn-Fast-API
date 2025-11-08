@@ -1,7 +1,16 @@
-"psycopg2-binary (>=2.9.11,<3.0.0)"
->>>>>>> main-daminiyadav23
+[project]
+name = "learn-fast-api"
+version = "0.1.0"
+description = ""
+authors = [{ name = "Damini Yadav" }]
+dependencies = [
+    "fastapi (>=0.115.0,<1.0.0)",
+    "uvicorn (>=0.30.6,<1.0.0)",
+    "sqlalchemy (>=2.0.35,<3.0.0)",
+    "psycopg2-binary (>=2.9.11,<3.0.0)",
+    "python-dotenv (>=1.0.1,<2.0.0)",
+    "pydantic (>=2.8.2,<3.0.0)"
 ]
-
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

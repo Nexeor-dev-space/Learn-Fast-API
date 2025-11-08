@@ -1,2 +1,1 @@
-# app/db/__init__.py
-from . import models
+# This file marks the 'app' directory as a Python package.
