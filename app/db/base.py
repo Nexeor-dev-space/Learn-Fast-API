@@ -10,3 +10,6 @@ from app.db.models import user  # 👈 yaha sabhi models import karo (like user,
 # Agar tumhare paas aur models hain, unhe bhi import karo, jaise:
 # from app.db.models import post, comment, etc.
 
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()

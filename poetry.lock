@@ -849,7 +849,6 @@ dev = ["pre-commit", "tox"]
 testing = ["coverage", "pytest", "pytest-benchmark"]
 
 [[package]]
-<<<<<<< HEAD
 name = "psycopg2"
 version = "2.9.11"
 description = "psycopg2 - Python-PostgreSQL Database Adapter"
@@ -867,8 +866,7 @@ files = [
 ]
 
 [[package]]
-=======
->>>>>>> main-daminiyadav23
+main-daminiyadav23
 name = "psycopg2-binary"
 version = "2.9.11"
 description = "psycopg2 - Python-PostgreSQL Database Adapter"
@@ -1501,8 +1499,7 @@ standard = ["colorama (>=0.4) ; sys_platform == \"win32\"", "httptools (>=0.6.3)
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10"
-<<<<<<< HEAD
 content-hash = "1dfae01efb0eba7cd9b28aa20e4ee0cdb5f92ba8fcf65af25b3def8d93dabd83"
-=======
 content-hash = "6c3ac9e8612326b76bf2a72ef944fe7c38e40e05d1e70559a179b5594db17bba"
->>>>>>> main-daminiyadav23
+content-hash = "6c3ac9e8612326b76bf2a72ef944fe7c38e40e05d1e70559a179b5594db17bba"
+main-daminiyadav23

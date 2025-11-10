@@ -6,6 +6,8 @@ from app.db.database import get_db, Base, engine
 from app.db.models import User
 from app.schemas.user import UserCreate
 from app.db.init_data import init_data  # ✅ make sure ye path sahi hai
+from fastapi import FastAPI
+from app.db import config  # ensure this path matches your folder structure
 
 # ✅ Database tables create karo
 Base.metadata.create_all(bind=engine)
@@ -47,3 +49,5 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 def get_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return users
+async def read_root():
+    return {"message": "Hello, FastAPI is running!!"}

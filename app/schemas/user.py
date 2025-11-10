@@ -5,6 +5,8 @@ from pydantic import BaseModel
 # ------------------------------------------------------
 # Common fields shared between create/read schemas
 # ------------------------------------------------------
+from pydantic import BaseModel
+
 class UserBase(BaseModel):
     username: str
     fullname: str
@@ -20,8 +22,12 @@ class UserCreate(UserBase):
 # ------------------------------------------------------
 # Schema for reading user data (response model)
 # ------------------------------------------------------
+class UserCreate(UserBase):
+    password: str
+
 class UserRead(UserBase):
     id: int
 
     class Config:
         orm_mode = True  # Converts SQLAlchemy model -> Pydantic model
+        orm_mode = True
