@@ -1,14 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import declarative_base, sessionmaker
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from app.config import settings
 
-
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env', extra="ignore")
-    ASYNC_DATABASE_URL: str
-
-
-settings = Settings()
 Base = declarative_base()
 
 engine = create_async_engine(settings.ASYNC_DATABASE_URL, echo=True)
