@@ -1,19 +1,30 @@
-from pydantic import BaseModel, Field
+# C:\MyProjects\Learn-Fast-API\app\schemas\user.py
 
-# Base schema for common fields
+from pydantic import BaseModel
+
+# --- Registration Schemas (MISSING) ---
 class UserBase(BaseModel):
-    username: str = Field(min_length=3, max_length=50)
-    fullname: str = Field(min_length=3, max_length=100)
+    username: str
+    fullname: str
 
-# Schema used when creating a new user (requires password)
-class UserCreate(UserBase):
-    password: str = Field(min_length=8)
+class UserIn(UserBase):
+    """Schema for incoming registration data."""
+    password: str
 
-# Schema used for reading/returning user data (never includes password)
-class UserRead(UserBase):
+class UserOut(UserBase):
+    """Schema for user data returned to the client (without password)."""
     id: int
+    
+    class Config:
+        from_attributes = True
 
-    # Configuration class for Pydantic V2 to work with SQLAlchemy models
-    model_config = {
-        "from_attributes": True  # Allows Pydantic to read ORM attributes (like id)
-    }
+# --- Login Schemas (You already have these) ---
+class UserLogin(BaseModel):
+    """Schema for user login credentials."""
+    username: str
+    password: str 
+
+class Token(BaseModel):
+    """Schema for the JWT token response."""
+    access_token: str
+    token_type: str = "bearer"

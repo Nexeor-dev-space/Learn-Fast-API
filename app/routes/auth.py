@@ -1,43 +1,55 @@
+# C:\MyProjects\Learn-Fast-API\app\routes\auth.py
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.db.database import get_db
-from app.schemas.user import UserCreate, UserRead
-from app.services.user import create_user, get_user_by_username
 
-# Create the router instance
-# The prefix means all routes defined here will start with /auth
-router = APIRouter(
-    prefix="/auth",
-    tags=["auth"],
-)
+# 1. Import Registration Schemas (Check your file path!)
+from app.schemas.user import UserIn, UserOut 
 
-@router.post(
-    "/register", 
-    response_model=UserRead, 
-    status_code=status.HTTP_201_CREATED,
-    summary="Register a new user"
-)
+# FIX: Import login schemas from 'user'
+from app.schemas.user import UserLogin, Token
+
+# 2. Import Login/Token Schemas (Check your file path!)
+from app.schemas.user import UserLogin, Token 
+
+# Import services and DB dependency
+from app.services.user import create_user 
+from app.services.auth import authenticate_user, create_access_token 
+from app.db.database import get_db 
+
+router = APIRouter(prefix="/auth", tags=["auth"])
+
+@router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 async def register_user(
-    user_in: UserCreate, 
-    db: AsyncSession = Depends(get_db) # Dependency injection for DB session
+    user_in: UserIn,
+    db: AsyncSession = Depends(get_db)
+):
+    # (Existing registration logic goes here)
+    # ...
+    pass # Replace with your existing code
+
+# NEW ROUTE: User Login
+@router.post("/login", response_model=Token)
+async def login_for_access_token(
+    user_in: UserLogin,
+    db: AsyncSession = Depends(get_db)
 ):
     """
-    Handles user registration by:
-    1. Validating the unique username.
-    2. Hashing the password (done in service layer).
-    3. Saving the new user to the database.
+    Handles user login, verifies credentials, and issues a JWT token.
     """
+    user = await authenticate_user(db, user_in)
     
-    # 1. Validate unique username using the service function
-    existing_user = await get_user_by_username(db, username=user_in.username)
-    if existing_user:
+    if not user:
+        # 401 Unauthorized for bad credentials
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already registered"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # 2. Hash password and save user (handled by the service function)
-    new_user = await create_user(db, user_in)
+    # Generate and return the token
+    access_token = create_access_token(
+        data={"sub": user.username}
+    )
     
-    # 3. Return the user data, using UserRead to omit the password
-    return new_user
+    return {"access_token": access_token, "token_type": "bearer"}
