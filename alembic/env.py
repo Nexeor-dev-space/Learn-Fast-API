@@ -21,6 +21,15 @@ if config.config_file_name is not None:
 
 # target_metadata is where we tell Alembic which SQLAlchemy models to look at.
 # We set it to the Base metadata we imported from app.db.database
+# C:\MyProjects\Learn-Fast-API\alembic\env.py
+
+# ... (around line 20-30, where Base is imported)
+from app.db.database import Base 
+
+# IMPORTANT: Import all your models here so Alembic can find them!
+from app.models import user # <--- MAKE SURE THIS IS PRESENT (or app.models.user)
+
+# ... (later in the file)
 target_metadata = Base.metadata
 
 
