@@ -40,4 +40,4 @@ async def register_user(
     new_user = await create_user(db, user_in)
     
     # 3. Return the user data, using UserRead to omit the password
-    return new_user
+    return UserRead.from_orm(new_user)
