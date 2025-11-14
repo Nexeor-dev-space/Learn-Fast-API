@@ -27,17 +27,22 @@ async def register_user(
     2. Hashing the password (done in service layer).
     3. Saving the new user to the database.
     """
-    
-    # 1. Validate unique username using the service function
-    existing_user = await get_user_by_username(db, username=user_in.username)
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already registered"
+    try:
+        # 1. Validate unique username using the service function
+        existing_user = await get_user_by_username(db, username=user_in.username)
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username already registered"
+            )
+        
+        # 2. Hash password and save user (handled by the service function)
+        new_user = await create_user(db, user_in)
+        
+        # 3. Return the user data, using UserRead to omit the password
+        return UserRead.model_validate(new_user)
+    except Exception:
+        return HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
         )
-    
-    # 2. Hash password and save user (handled by the service function)
-    new_user = await create_user(db, user_in)
-    
-    # 3. Return the user data, using UserRead to omit the password
-    return UserRead.from_orm(new_user)
