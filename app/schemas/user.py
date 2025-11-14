@@ -17,3 +17,4 @@ class UserRead(UserBase):
     model_config = {
         "from_attributes": True  # Allows Pydantic to read ORM attributes (like id)
     }
+    
