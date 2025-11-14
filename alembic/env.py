@@ -1,6 +1,6 @@
 from logging.config import fileConfig
 
-from sqlalchemy import pool, create_engine # We need create_engine here
+from sqlalchemy import pool, create_engine
 from alembic import context
 
 # Import your settings and Base model configuration
@@ -8,6 +8,11 @@ import os
 import sys
 # Add the project root to the path so it can find app.core and app.db
 sys.path.insert(0, os.path.abspath("."))
+
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
 from app.core.config import settings
 from app.db.database import Base 
 
