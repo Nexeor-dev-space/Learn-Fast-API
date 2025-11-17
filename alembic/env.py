@@ -1,37 +1,49 @@
 from logging.config import fileConfig
-import sys
-import os
 
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import pool, create_engine
 from alembic import context
 
-# Add project root to path
+# Import your settings and Base model configuration
+import os
+import sys
+# Add the project root to the path so it can find app.core and app.db
 sys.path.insert(0, os.path.abspath("."))
 
-# Load environment variables
+# Load environment variables from .env file
 from dotenv import load_dotenv
 load_dotenv()
 
-# Import settings & Base
-from app.core.settings import settings
-from app.db.database import Base
-from app.models.user import User  # Import your models here
+from app.core.config import settings
+from app.db.database import Base 
 
-# Alembic config
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use.
 config = context.config
 
-# Logging from alembic.ini
+# Interpret the config file for Python logging.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Metadata for autogenerate
-target_metadata = Base.metadata
+# target_metadata is where we tell Alembic which SQLAlchemy models to look at.
+# We set it to the Base metadata we imported from app.db.database
+# C:\MyProjects\Learn-Fast-API\alembic\env.py
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# ... (around line 20-30, where Base is imported)
+from app.db.database import Base 
+
+# IMPORTANT: Import all your models here so Alembic can find them!
+from app.models import user # <--- MAKE SURE THIS IS PRESENT (or app.models.user)
+
+# ... (later in the file)
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode."""
+    """Run migrations in 'offline' mode.
+
+    Configures the context with just a URL.
+    """
+    # Use the synchronous URL for configuring the context
     url = settings.SYNC_DATABASE_URL
     context.configure(
         url=url,
@@ -45,12 +57,15 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in 'online' mode."""
-    connectable = engine_from_config(
-        {
-            'sqlalchemy.url': settings.SYNC_DATABASE_URL
-        },
-        prefix="sqlalchemy.",
+    """Run migrations in 'online' mode.
+
+    Creates an Engine and associates a connection with the context, 
+    using the synchronous DB URL from our Pydantic settings.
+    """
+    # FIX: We use create_engine directly with the synchronous URL
+    # to avoid the 'psycopg2' import error.
+    connectable = create_engine(
+        settings.SYNC_DATABASE_URL,
         poolclass=pool.NullPool,
     )
 
