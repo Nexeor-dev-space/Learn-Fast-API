@@ -12,3 +12,4 @@ app.include_router(user_routes.router)
 @app.get('/')
 def index():
     return {'Message':'Hello World!'}
+    
