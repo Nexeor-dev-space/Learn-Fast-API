@@ -2,12 +2,23 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from sqlalchemy import pool, create_engine
+from alembic import context
 
 from alembic import context
 from app.db.database import Base,settings
 from app.models.user import User 
 import sys
 import os
+# Add the project root to the path so it can find app.core and app.db
+sys.path.insert(0, os.path.abspath("."))
+
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
+from app.core.settings import settings
+from app.db.database import Base 
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
