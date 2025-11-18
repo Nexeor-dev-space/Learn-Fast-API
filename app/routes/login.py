@@ -29,6 +29,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 @router.post("/login")
 async def login(username: str, password: str, db: AsyncSession = Depends(get_db)):
     try:
+        print(username,password)
         # Fetch the user
         result = await db.execute(select(User).filter(User.username == username))
         user = result.scalars().first()
