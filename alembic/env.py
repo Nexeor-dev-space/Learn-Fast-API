@@ -7,6 +7,7 @@ from alembic import context
 
 sys.path.insert(0, os.path.abspath("."))
 
+# Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
 
