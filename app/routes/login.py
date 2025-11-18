@@ -1,5 +1,6 @@
 # app/routes/login.py
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from datetime import datetime, timedelta
@@ -8,6 +9,7 @@ from jose import jwt, JWTError
 from app.db.database import get_db
 from app.models.user import User
 from app.schemas.register import UserRead  # for returning minimal user info
+from app.schemas.login import TokenResponse  # for login response
 from app.services.user_service import verify_password
 from app.core.settings import settings  # read JWT settings from .env
 
@@ -26,18 +28,20 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-@router.post("/login")
-async def login(username: str, password: str, db: AsyncSession = Depends(get_db)):
+@router.post("/login", response_model=TokenResponse)
+async def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: AsyncSession = Depends(get_db)
+):
     try:
-        print(username,password)
         # Fetch the user
-        result = await db.execute(select(User).filter(User.username == username))
+        result = await db.execute(select(User).filter(User.username == form_data.username))
         user = result.scalars().first()
         if not user:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
 
         # Verify password
-        if not verify_password(password, user.hashed_password):
+        if not verify_password(form_data.password, user.hashed_password):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
 
         # Create JWT token
