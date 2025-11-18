@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 
@@ -13,10 +13,8 @@ class TaskRead(BaseModel):
     description: str | None = None
     completed: bool
     owner_id: int
-    created_at: datetime
-
-    class Config:
-        orm_mode = True  
+    
+    model_config = ConfigDict(from_attributes=True)
 
 class TaskUpdate(BaseModel):
     title: str | None = None
