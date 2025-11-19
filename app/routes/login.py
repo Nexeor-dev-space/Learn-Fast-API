@@ -1,5 +1,6 @@
 # app/routes/login.py
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm  # ADD THIS IMPORT
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from datetime import datetime, timedelta
@@ -27,9 +28,12 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 
 @router.post("/login")
-async def login(username: str, password: str, db: AsyncSession = Depends(get_db)):
+async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):  # CHANGE THIS LINE
     try:
-        print(username,password)
+        username = form_data.username  # ADD THIS LINE
+        password = form_data.password  # ADD THIS LINE
+        print(username, password)
+        
         # Fetch the user
         result = await db.execute(select(User).filter(User.username == username))
         user = result.scalars().first()

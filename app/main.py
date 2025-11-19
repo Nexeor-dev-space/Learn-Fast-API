@@ -6,7 +6,6 @@ from app.routes.task import router as task_router
 
 app = FastAPI(title="FastAPI Project")
 
-# Include your actual routers
 app.include_router(register_router)
 app.include_router(login_router)
 app.include_router(user_router)
