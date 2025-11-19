@@ -32,7 +32,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     try:
         username = form_data.username  # ADD THIS LINE
         password = form_data.password  # ADD THIS LINE
-        print(username, password)
+        # print(username, password)
         
         # Fetch the user
         result = await db.execute(select(User).filter(User.username == username))
