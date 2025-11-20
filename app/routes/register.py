@@ -38,7 +38,7 @@ async def register_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
         await db.refresh(new_user)
 
         # 5️⃣ Return user data (without password)
-        return UserRead.from_orm(new_user)
+        return UserRead.model_validate(new_user)
 
     except SQLAlchemyError as e:
         # Handle database errors
