@@ -23,6 +23,9 @@ passlib = { version = "^1.7.4", extras = ["bcrypt"] }
 cryptography = "^46.0.3"
 bcrypt = "^4.0.1"
 
+# Form data support
+python-multipart = "^0.0.20"
+
 # Settings and Configuration
 pydantic-settings = "^2.12.0"
 
