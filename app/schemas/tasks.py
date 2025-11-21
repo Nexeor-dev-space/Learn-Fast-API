@@ -19,4 +19,4 @@ class TaskRead(BaseModel):
 class TaskUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
-    completed: bool | None = None  
+    completed: bool | None = None 
