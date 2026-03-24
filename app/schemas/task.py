@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class TaskCreate(BaseModel):
     title: str
-    desciption: str | None = None
+    description: str | None = None
 
 class TaskRead(BaseModel):
     id: int
