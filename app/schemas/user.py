@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class UserBase(BaseModel):
     username: str = Field(min_length=3, max_length=50)
-    fullname: str | None = Field(default=None, max_length=100)
+    fullname: str = Field(min_length=1, max_length=100)
 
     @field_validator("username", mode="before")
     @classmethod
