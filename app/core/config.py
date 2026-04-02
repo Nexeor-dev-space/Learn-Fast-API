@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     postgres_password: str
     postgres_db: str
 
+    test_db_url: str
+
     jwt_secret_key: str
     access_token_expire_minutes: int
     refresh_token_expire_minutes: int
